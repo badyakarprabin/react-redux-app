@@ -1,44 +1,95 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project created using [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Steps to add redux store.
 
-In the project directory, you can run:
+### Step 1
+1. `yarn add redux`
+2. `yarn add react-redux`
+3. `yarn add redux-thunk`
+4. `yarn add redux-promise-middleware`
 
-### `npm start`
+`3 and 4 are for async action.`
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Step 2
+1. Add Action.
+2. Add Reducer.
+3. Add Store.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+`Example in the source file.`
 
-### `npm test`
+### For Sync action in store.js
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+`const store = createStore(rootReducer, window.devToolsExtension ? window.devToolsExtension() : f => f);
+`
 
-### `npm run build`
+### For Async action in store.js
+`
+const enhancers = [applyMiddleware(thunk, promiseMiddleware())];
+`
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+`if (window['__REDUX_DEVTOOLS_EXTENSION__']) {
+  enhancers.push(window['__REDUX_DEVTOOLS_EXTENSION__']());
+}
+`
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+`
+const store = createStore(rootReducer, compose(...enhancers));
+`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Action.js
 
-### `npm run eject`
+`
+import { createAction } from 'redux-actions';
+import { FULFILLED, PENDING, REJECTED } from 'redux-promise-middleware';
+import { getUsers } from '../services/users';
+`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+// Action Constants
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+`
+export const FETCH_USER = 'FETCH_USER';
+`
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+// Async Action Creators
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+``
+export const FETCH_USER_PENDING = `${FETCH_USER}_${PENDING}`;
+export const FETCH_USER_REJECTED = `${FETCH_USER}_${REJECTED}`;
+export const FETCH_USER_FULFILLED = `${FETCH_USER}_${FULFILLED}`;
+``
 
-## Learn More
+`
+export const fetchUsers = createAction(FETCH_USER, getUsers);
+`
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Reducer
+`
+import { FETCH_USER_PENDING, FETCH_USER_FULFILLED } from '../action/users';
+`
+`
+const INITIAL_STATE = {
+  list: [],
+  isLoading: false
+};
+`
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+`
+export default function(state = INITIAL_STATE, action) 
+`
+`{
+  switch (action.type) {
+    case FETCH_USER_PENDING:
+      return {
+        ...state,
+        isLoading: true
+      };
+    case FETCH_USER_FULFILLED:
+      return {
+        ...state,
+        list: action.payload,
+        isLoading: false
+      };
+    default:
+      return state;
+  }
+}`

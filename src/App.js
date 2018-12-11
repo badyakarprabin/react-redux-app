@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 
 import store from './store';
 
-import './App.css';
+import './assets/css/App.scss';
 import User from './components/User';
 
 class App extends Component {
@@ -11,8 +11,10 @@ class App extends Component {
     return (
       <Provider store={store}>
         <div className="App">
-          <header className="App-header">Learn React Redux</header>
-          <User />
+          <header className="App-header">
+            Learn React Redux
+            <User />
+          </header>
         </div>
       </Provider>
     );

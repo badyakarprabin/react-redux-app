@@ -3,6 +3,7 @@ This project created using [Create React App](https://github.com/facebook/create
 ## Steps to add redux store.
 
 ### Step 1
+
 1. `yarn add redux`
 2. `yarn add react-redux`
 3. `yarn add redux-thunk`
@@ -11,6 +12,7 @@ This project created using [Create React App](https://github.com/facebook/create
 `3 and 4 are for async action.`
 
 ### Step 2
+
 1. Add Action.
 2. Add Reducer.
 3. Add Store.
@@ -19,77 +21,42 @@ This project created using [Create React App](https://github.com/facebook/create
 
 ### For Sync action in store.js
 
-`const store = createStore(rootReducer, window.devToolsExtension ? window.devToolsExtension() : f => f);
-`
+`const store = createStore(rootReducer, window.devToolsExtension ? window.devToolsExtension() : f => f);`
 
 ### For Async action in store.js
-`
-const enhancers = [applyMiddleware(thunk, promiseMiddleware())];
-`
 
-`if (window['__REDUX_DEVTOOLS_EXTENSION__']) {
-  enhancers.push(window['__REDUX_DEVTOOLS_EXTENSION__']());
-}
-`
+`const enhancers = [applyMiddleware(thunk, promiseMiddleware())];`
 
-`
-const store = createStore(rootReducer, compose(...enhancers));
-`
+`if (window['__REDUX_DEVTOOLS_EXTENSION__']) { enhancers.push(window['__REDUX_DEVTOOLS_EXTENSION__']()); }`
+
+`const store = createStore(rootReducer, compose(...enhancers));`
 
 ### Action.js
 
-`
-import { createAction } from 'redux-actions';
-import { FULFILLED, PENDING, REJECTED } from 'redux-promise-middleware';
-import { getUsers } from '../services/users';
-`
+`import { createAction } from 'redux-actions'; import { FULFILLED, PENDING, REJECTED } from 'redux-promise-middleware'; import { getUsers } from '../services/users';`
 
 // Action Constants
 
-`
-export const FETCH_USER = 'FETCH_USER';
-`
+`export const FETCH_USER = 'FETCH_USER';`
 
 // Async Action Creators
 
 ``
-export const FETCH_USER_PENDING = `${FETCH_USER}_${PENDING}`;
-export const FETCH_USER_REJECTED = `${FETCH_USER}_${REJECTED}`;
-export const FETCH_USER_FULFILLED = `${FETCH_USER}_${FULFILLED}`;
+export const FETCH*USER_PENDING = `\${FETCH_USER}*\${PENDING}`;
+
+export const FETCH*USER_REJECTED = `\${FETCH_USER}*\${REJECTED}`;
+
+export const FETCH*USER_FULFILLED = `\${FETCH_USER}*\${FULFILLED}`;
 ``
 
-`
-export const fetchUsers = createAction(FETCH_USER, getUsers);
-`
+`export const fetchUsers = createAction(FETCH_USER, getUsers);`
 
 ### Reducer
-`
-import { FETCH_USER_PENDING, FETCH_USER_FULFILLED } from '../action/users';
-`
-`
-const INITIAL_STATE = {
-  list: [],
-  isLoading: false
-};
-`
 
-`
-export default function(state = INITIAL_STATE, action) 
-`
-`{
-  switch (action.type) {
-    case FETCH_USER_PENDING:
-      return {
-        ...state,
-        isLoading: true
-      };
-    case FETCH_USER_FULFILLED:
-      return {
-        ...state,
-        list: action.payload,
-        isLoading: false
-      };
-    default:
-      return state;
-  }
-}`
+`import { FETCH_USER_PENDING, FETCH_USER_FULFILLED } from '../action/users';`
+
+`const INITIAL_STATE = { list: [], isLoading: false };`
+
+`export default function(state = INITIAL_STATE, action)`
+
+`{ switch (action.type) { case FETCH_USER_PENDING: return { ...state, isLoading: true }; case FETCH_USER_FULFILLED: return { ...state, list: action.payload, isLoading: false }; default: return state; } }`

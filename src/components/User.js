@@ -7,8 +7,9 @@ import { fetchUsers } from '../action/users';
 class User extends Component {
   render() {
     const {
-      userDetail: { list = [], isLoading }
+      userDetail: { list = [], isLoading, error }
     } = this.props;
+    const hasData = list && list.length && !error;
 
     return (
       <div className="App">
@@ -17,12 +18,13 @@ class User extends Component {
 
         {/* Click to fetch value from api and store in the redux store */}
         <div onClick={() => this.props.fetchUsers()}>
-          {' '}
           {isLoading ? 'Loading' : 'Exmple of redux(Click to fetch data and store in redux store)'}
         </div>
-        {list.map(item => (
-          <div>{item.firstName}</div>
-        ))}
+
+        {hasData && list.map(item => <div>{item.firstName}</div>)}
+
+        {error && <div>Error Fetchting data</div>}
+
         <br />
         <Link to="/error">Random routes</Link>
       </div>

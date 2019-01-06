@@ -16,9 +16,10 @@ if (window['__REDUX_DEVTOOLS_EXTENSION__']) {
 // For presisting the store.
 const persistConfig = {
   key: 'root',
-  storage: storage
+  storage: storage,
+  // remove data when page is refreshed
+  blacklist: ['users']
 };
-
 
 const persistReducerConfig = persistReducer(persistConfig, rootReducer);
 export const store = createStore(persistReducerConfig, compose(...enhancers));
